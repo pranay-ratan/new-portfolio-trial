@@ -20,39 +20,39 @@ const JetBrainsMonoFont = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Pranay Ratan - Data Scientist',
+  title: 'Pranay Ratan - Data Science Student',
   description:
-    'Pranay Ratan is a data scientist based in Burnaby, BC, currently working as a Research Assistant at Simon Fraser University and as an SFSS Council Representative. Experienced in data analysis, web development, and content creation.',
+    'Pranay Ratan is a Data Science student at Simon Fraser University, currently working as a Research Assistant at the Beedie School of Business and as the SFSS Council Representative for the Data Science Student Society.',
   twitter: {
     card: 'summary_large_image',
-    creator: '@pranay_ratan',
+    creator: '@pranayratan',
     images: ['/og.png'],
-    title: 'Pranay Ratan - Data Scientist',
+    title: 'Pranay Ratan - Data Science Student',
   },
   openGraph: {
-    title: 'Pranay Ratan - Data Scientist',
+    title: 'Pranay Ratan - Data Science Student',
     images: [
       {
         url: '/og.png',
         width: 1200,
         height: 630,
-        alt: 'Pranay Ratan - Data Scientist',
+        alt: 'Pranay Ratan - Data Science Student',
       },
     ],
-    siteName: 'Pranay Ratan - Data Scientist',
+    siteName: 'Pranay Ratan - Data Science Student',
   },
-  metadataBase: new URL('https://pranay-ratan.com'),
+  metadataBase: new URL('https://pranayratan.com'),
 };
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: 'Pranay Ratan',
-  image: 'https://pranay-ratan.com/avatar.jpeg',
-  url: 'https://pranay-ratan.com',
-  jobTitle: 'Data Scientist',
+  image: 'https://pranayratan.com/avatar.jpeg',
+  url: 'https://pranayratan.com',
+  jobTitle: 'Data Science Student',
   sameAs: [
-    'https://twitter.com/pranay_ratan',
+    'https://twitter.com/pranayratan',
     'https://www.github.com/pranay-ratan',
     'https://www.linkedin.com/in/pranay-ratan/',
   ],
@@ -93,10 +93,10 @@ export default function RootLayout({
                 Information
               </Link>
               <Link
-                href="/posts"
+                href="/experience"
                 className="text-950 text-sm tracking-tighter font-mono font-semibold"
               >
-                Writing
+                Experience
               </Link>
               <Link
                 className="text-950 text-sm tracking-tighter font-mono font-semibold"
@@ -112,7 +112,7 @@ export default function RootLayout({
               &copy; 2010 - {new Date().getFullYear()} {'/'} Pranay Ratan
             </p>
             <p>
-              <Link href="https://github.com/pranay-ratan/www">View Source</Link>
+              <Link href="https://github.com/pranay-ratan/portfolio-website">View Source</Link>
             </p>
           </footer>
         </div>
