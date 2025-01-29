@@ -12,33 +12,50 @@ import {
   TextWrapPrettyVsBalance,
 } from '@/app/components/posts/2024-05-21-future-css-text-wrap-pretty';
 
+/**
+ * Generates static paths for blog posts.
+ * Ensures that missing posts directory does not crash the build.
+ */
 export async function generateStaticParams() {
-  const paths = getAllPostPaths();
+  try {
+    const paths = await getAllPostPaths();
 
-  return paths;
+    if (!paths || paths.length === 0) {
+      console.warn("⚠️ No posts found. Skipping static params generation.");
+      return [];
+    }
+
+    return paths.map((post) => ({ slug: post.slug }));
+  } catch (error) {
+    console.error("❌ Error generating static params:", error);
+    return [];
+  }
 }
 
+/**
+ * Generates metadata for each blog post dynamically.
+ * Ensures missing metadata does not break the page.
+ */
 export async function generateMetadata(
   { params }: { params: { slug: string } },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const post = getPostBySlug(params.slug);
+  const post = await getPostBySlug(params.slug); // Ensure awaiting the function
 
   const parentMeta = await parent;
 
   return {
-    title: post?.meta.title,
-    description: post?.meta.summary,
-    publisher: 'Alex Pate',
-    creator: 'Alex Pate',
+    title: post?.meta?.title || "Untitled Post",
+    description: post?.meta?.summary || "A blog post on my website.",
+    publisher: "Alex Pate",
+    creator: "Alex Pate",
     twitter: {
       ...parentMeta?.twitter,
       siteId: undefined,
       site: undefined,
-      creator: '@alexjpate',
-      creatorId: '243263662',
-      description:
-        post?.meta?.summary || parentMeta?.twitter?.description || undefined,
+      creator: "@alexjpate",
+      creatorId: "243263662",
+      description: post?.meta?.summary || parentMeta?.twitter?.description,
       title: post?.meta?.title || parentMeta?.twitter?.title,
     },
     openGraph: {
@@ -54,12 +71,16 @@ type Params = {
   slug: string;
 };
 
+/**
+ * Renders an individual blog post.
+ * Ensures missing posts do not crash the page.
+ */
 export default async function Post({ params }: { params: Params }) {
-  const post = getPostBySlug(params.slug);
+  const post = await getPostBySlug(params.slug); // Ensure awaiting the function
 
   if (!post) return notFound();
 
-  if (post.meta.draft && process.env.NODE_ENV !== 'development') {
+  if (post.meta.draft && process.env.NODE_ENV !== "development") {
     return notFound();
   }
 
@@ -72,10 +93,10 @@ export default async function Post({ params }: { params: Params }) {
           {meta.title}
         </h1>
         <span className="text-slate-500 text-sm tracking-tight font-mono block mt-4">
-          Published on{' '}
+          Published on{" "}
           <time dateTime={post.date}>
-            {new Intl.DateTimeFormat('en-GB', {
-              dateStyle: 'medium',
+            {new Intl.DateTimeFormat("en-GB", {
+              dateStyle: "medium",
             }).format(new Date(post.date))}
           </time>
         </span>
