@@ -48,11 +48,21 @@ export const getDateAndSlugFromFilename = (
  * @returns An object containing the front matter, date, slug, and href, or null if the filename does not match the expected format.
  */
 const getPostFromFile = (filename: string, isWork?: boolean): Post | null => {
-  const fileContent = fs.readFileSync(
-    path.join(isWork ? WORK_PATH : POSTS_PATH, filename),
-    'utf-8'
-  );
+  const directoryPath = path.join(isWork ? WORK_PATH : POSTS_PATH);
 
+  if (!fs.existsSync(directoryPath)) {
+    console.warn(`⚠️ Warning: Directory "${directoryPath}" does not exist.`);
+    return null;
+  }
+
+  const filePath = path.join(directoryPath, filename);
+
+  if (!fs.existsSync(filePath)) {
+    console.warn(`⚠️ Warning: File "${filePath}" not found.`);
+    return null;
+  }
+
+  const fileContent = fs.readFileSync(filePath, 'utf-8');
   const { data: frontMatter, content } = matter(fileContent);
 
   const dateAndSlug = getDateAndSlugFromFilename(filename);
@@ -78,7 +88,26 @@ const getPostFromFile = (filename: string, isWork?: boolean): Post | null => {
  * @returns The post with the given slug, or null if no such post exists.
  */
 export const getPostBySlug = (slug: string, isWork?: boolean): Post | null => {
-  const files = fs.readdirSync(path.join(isWork ? WORK_PATH : POSTS_PATH));
+  const directoryPath = path.join(isWork ? WORK_PATH : POSTS_PATH);
+
+  if (!fs.existsSync(directoryPath)) {
+    console.warn(`⚠️ Warning: Directory "${directoryPath}" does not exist.`);
+    return null;
+  }
+
+  let files: string[] = [];
+
+  try {
+    files = fs.readdirSync(directoryPath);
+  } catch (error) {
+    console.error(`❌ Error reading directory "${directoryPath}":`, error);
+    return null;
+  }
+
+  if (files.length === 0) {
+    console.warn(`⚠️ Warning: No files found in "${directoryPath}".`);
+    return null;
+  }
 
   for (const filename of files) {
     if (getRegexForSlug(slug).test(filename)) {
@@ -105,20 +134,32 @@ export const getAllPosts = async ({
   filePath?: string;
   isWork?: boolean;
 }): Promise<Post[]> => {
-  const files = fs.readdirSync(path.join(isWork ? WORK_PATH : POSTS_PATH));
+  const directoryPath = path.join(isWork ? WORK_PATH : POSTS_PATH);
+
+  if (!fs.existsSync(directoryPath)) {
+    console.warn(`⚠️ Warning: Directory "${directoryPath}" does not exist.`);
+    return [];
+  }
+
+  let files: string[] = [];
+
+  try {
+    files = fs.readdirSync(directoryPath);
+  } catch (error) {
+    console.error(`❌ Error reading directory "${directoryPath}":`, error);
+    return [];
+  }
+
+  if (files.length === 0) {
+    console.warn(`⚠️ Warning: No files found in "${directoryPath}".`);
+    return [];
+  }
 
   const posts: Post[] = files
     .map((item) => getPostFromFile(item, isWork))
     .filter((post): post is Post => post !== null);
 
-  const filteredAndSortedPosts = posts.sort((a, b) => {
-    if (new Date(a.date) > new Date(b.date)) {
-      return -1;
-    }
-    return 1;
-  });
-
-  return filteredAndSortedPosts;
+  return posts.sort((a, b) => (new Date(a.date) > new Date(b.date) ? -1 : 1));
 };
 
 /**
