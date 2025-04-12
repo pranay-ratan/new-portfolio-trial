@@ -1,4 +1,4 @@
-import { PageHeader } from '@/app/components/page-header';
+import PageHeader from "@/app/components/PageHeader"; // ✅ Correct Import
 import { Title } from '@/app/components/title';
 import Link from 'next/link';
 

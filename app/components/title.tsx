@@ -8,9 +8,9 @@ interface Props {
 }
 
 const classNames = {
-  primary: 'font-semibold text-4xl tracking-tight',
-  secondary: 'font-semibold text-2xl tracking-tight',
-  tertiary: 'font-semibold text-xl tracking-tight',
+  primary: 'font-bold text-4xl tracking-tight transition-all duration-200',
+  secondary: 'font-semibold text-2xl tracking-tight transition-all duration-200',
+  tertiary: 'font-medium text-lg tracking-tight transition-all duration-200',
 };
 
 export function Title({
@@ -21,7 +21,13 @@ export function Title({
 }: Props) {
   const Component = as;
   return (
-    <Component className={clsx(classNames[variant], className)}>
+    <Component
+      className={clsx(
+        classNames[variant],
+        'hover:scale-105 hover:text-blue-600 hover:opacity-90',
+        className
+      )}
+    >
       {children}
     </Component>
   );

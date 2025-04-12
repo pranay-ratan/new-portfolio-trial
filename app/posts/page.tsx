@@ -1,4 +1,4 @@
-import { PageHeader } from '@/app/components/page-header';
+import PageHeader from '@/components/PageHeader';
 import { ArticleLink } from '../components/article-link';
 import { getAllPosts } from '@/lib/articles';
 
